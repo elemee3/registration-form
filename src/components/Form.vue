@@ -1,84 +1,182 @@
-<script setup>
-
-import DocumentationIcon from './icons/IconDocumentation.vue'
-import ToolingIcon from './icons/IconTooling.vue'
-import EcosystemIcon from './icons/IconEcosystem.vue'
-import CommunityIcon from './icons/IconCommunity.vue'
-import SupportIcon from './icons/IconSupport.vue'
+<script>
+import axios from 'axios';
+export default {
+  data() {
+    return {
+      pet: {
+        name: '',
+        type: '',
+        breed: '',
+        breedType: 'known', // known | unknown | mix
+        mixedBreedDetails: '',
+        gender: '',
+      },
+      breedOptions: {
+        cat: ['Tabby', 'Siamese', 'Longhair', 'Shorthair', 'Bengal', 'Russian Blue', 'Can\'t find it?'],
+        dog: ['Labrador', 'Bulldog', 'Retriever', 'German Shepherd', 'Poodle', 'Beagle', 'Rottweiler', 'Can\'t find it?']
+      },
+    }
+  },
+  methods: {
+    submitForm() {
+      // send pet data to API, inform user, clear form data
+      axios.post("https://6276292f15458100a6ac0d48.mockapi.io/api/v1/pets", this.pet)
+        .then(response => alert('Success!'))
+        .then(response => this.pet = {
+          name: '',
+          type: '',
+          breed: '',
+          breedType: 'known',
+          mixedBreedDetails: '',
+          gender: '',
+        })
+        .catch(error => alert('Something went wrong, please try again.'));
+    }
+  }
+}
 </script>
-
 <template>
-  <WelcomeItem>
-    <template #icon>
-      <DocumentationIcon />
-    </template>
-    <template #heading>Documentation</template>
+  <div class="form">
+    <img src="@/assets/pawprints.png" />
+    <h1>Tell us about your pet</h1>
 
-    Vue’s
-    <a target="_blank" href="https://vuejs.org/">official documentation</a>
-    provides you with all information you need to get started.
-  </WelcomeItem>
+    <p class="form-label">What is your pet's name?</p>
+    <input v-model="pet.name" />
 
-  <WelcomeItem>
-    <template #icon>
-      <ToolingIcon />
-    </template>
-    <template #heading>Tooling</template>
+    <div class="type-options">
+      <p class="form-label">What type of pet are they?</p>
+      <input type="radio" class="type-option" id="cat" value="cat" v-model="pet.type" /><label for="cat">Cat</label>
+      <input type="radio" class="type-option" id="dog" value="dog" v-model="pet.type" /><label for="dog">Dog</label>
+    </div>
 
-    This project is served and bundled with
-    <a href="https://vitejs.dev/guide/features.html" target="_blank">Vite</a>. The recommended IDE
-    setup is <a href="https://code.visualstudio.com/" target="_blank">VSCode</a> +
-    <a href="https://github.com/johnsoncodehk/volar" target="_blank">Volar</a>. If you need to test
-    your components and web pages, check out
-    <a href="https://www.cypress.io/" target="_blank">Cypress</a> and
-    <a href="https://docs.cypress.io/guides/component-testing/introduction" target="_blank"
-      >Cypress Component Testing</a
-    >.
+    <p class="form-label">What breed are they?</p>
+    <select v-model="pet.breed">
+      <option v-if="pet.type === 'cat'" v-for="item in breedOptions.cat" :value="item">{{item}}</option>
+      <option v-if="pet.type === 'dog'" v-for="item in breedOptions.dog" :value="item">{{item}}</option>
+      <option v-if="pet.type === ''" disabled>Please select a pet type first</option>
+    </select>
 
-    <br />
+    <div class="breed-options" v-if="pet.breed === 'Can\'t find it?'">
+      <p class="form-label">Choose One</p>
+      <input type="radio" class="breed-option" id="unknown" value="unknown" v-model="pet.breedType" /><label for="unknown">I don't know</label><br/>
+      <input type="radio" class="breed-option" id="mix" value="mix" v-model="pet.breedType" /><label for="mix">It's a mix</label><br />
+      <input class="mixed-breed-input" v-model="pet.mixedBreedDetails" placeholder="Which breeds are in the mix?" v-if="pet.breedType === 'mix'" />
+    </div>
 
-    More instructions are available in <code>README.md</code>.
-  </WelcomeItem>
+    <p class="form-label">What gender are they?</p>
+    <div class="gender-options">
+      <button :class="{ 'selected-gender': pet.gender === 'female' }" class="button-style gender-button female" @click="pet.gender = 'female'">Female</button>
+      <button :class="{ 'selected-gender': pet.gender === 'male' }" class="button-style gender-button male" @click="pet.gender = 'male'">Male</button>
+    </div>
 
-  <WelcomeItem>
-    <template #icon>
-      <EcosystemIcon />
-    </template>
-    <template #heading>Ecosystem</template>
-
-    Get official tools and libraries for your project:
-    <a target="_blank" href="https://pinia.vuejs.org/">Pinia</a>,
-    <a target="_blank" href="https://router.vuejs.org/">Vue Router</a>,
-    <a target="_blank" href="https://test-utils.vuejs.org/">Vue Test Utils</a>, and
-    <a target="_blank" href="https://github.com/vuejs/devtools">Vue Dev Tools</a>. If you need more
-    resources, we suggest paying
-    <a target="_blank" href="https://github.com/vuejs/awesome-vue">Awesome Vue</a>
-    a visit.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <CommunityIcon />
-    </template>
-    <template #heading>Community</template>
-
-    Got stuck? Ask your question on
-    <a target="_blank" href="https://chat.vuejs.org">Vue Land</a>, our official Discord server, or
-    <a target="_blank" href="https://stackoverflow.com/questions/tagged/vue.js">StackOverflow</a>.
-    You should also subscribe to
-    <a target="_blank" href="https://news.vuejs.org">our mailing list</a> and follow the official
-    <a target="_blank" href="https://twitter.com/vuejs">@vuejs</a>
-    twitter account for latest news in the Vue world.
-  </WelcomeItem>
-
-  <WelcomeItem>
-    <template #icon>
-      <SupportIcon />
-    </template>
-    <template #heading>Support Vue</template>
-
-    As an independent project, Vue relies on community backing for its sustainability. You can help
-    us by
-    <a target="_blank" href="https://vuejs.org/sponsor/">becoming a sponsor</a>.
-  </WelcomeItem>
+    <div class="continue">
+      <button class="button-style submit-button" @click=submitForm()>Save Pet</button>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+@import '@/assets/base.css';
+
+.form {
+  background-color: white;
+  width: 70vw;
+  max-width: 350px;
+  min-height: 500px;
+  margin: 25px auto;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+input, select {
+  padding: 5px 12px;
+  background-color: white;
+  border: 1px solid darkgray;
+  border-radius: 3px;
+}
+
+.form-label {
+  font-size: 15px;
+  margin: 15px 0 2px 0;
+}
+
+.breed-options {
+  margin-left: 20px;
+}
+
+.breed-option, .type-option {
+  margin: 8px;
+}
+
+.breed-option label::after {
+  color: #fff;
+}
+
+.breed-option label::before {
+  color: #fff;
+}
+
+.mixed-breed-input {
+  margin-left: 8px;
+  max-width: 200px;
+}
+
+h1 {
+  color: #2f628f;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.button-style {
+  border: 1px solid #00aeef;
+  border-radius: 5px;
+}
+
+.gender-button {
+  background-color: white;
+  color: #00aeef;
+  padding: 5px 25px;
+}
+
+.gender-button:hover {
+  background-color: #00aeef;
+  color: white;
+}
+
+.female {
+  border-radius: 5px 0 0 5px;
+}
+
+.male {
+  border-radius: 0 5px 5px 0;
+}
+
+.selected-gender {
+  background-color: #00aeef;
+  color: white;
+}
+
+.submit-button {
+  background-color: #00aeef;
+  color: white;
+  padding: 8px 50px;
+}
+
+.submit-button:hover {
+  background-color: white;
+  color: #00aeef;
+}
+
+.continue {
+  margin: 35px auto 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .form {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 35px 55px;
+  }
+}
+</style>
