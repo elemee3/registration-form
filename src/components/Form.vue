@@ -20,7 +20,7 @@ export default {
   methods: {
     submitForm() {
       // send pet data to API, inform user, clear form data
-      axios.post("https://6276292f15458100a6ac0d48.mockapi.io/api/v1/pets", this.pet)
+      axios.post("http://localhost:8000/api/pets", this.pet)
         .then(response => alert('Success!'))
         .then(response => this.pet = {
           name: '',
