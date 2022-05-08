@@ -38,7 +38,6 @@ header {
   justify-content: space-evenly;
   background-color: white;
   padding: 10px;
-  margin-top: 10px;
 }
 
 .logo {

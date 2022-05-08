@@ -12,8 +12,8 @@ export default {
         gender: '',
       },
       breedOptions: {
-        cat: ['Tabby', 'Siamese', 'Longhair', 'Shorthair', 'Bengal', 'Russian Blue', 'Can\'t find it?'],
-        dog: ['Labrador', 'Bulldog', 'Retriever', 'German Shepherd', 'Poodle', 'Beagle', 'Rottweiler', 'Can\'t find it?']
+        cat: ['Tabby', 'Siamese', 'Domestic Long-haired', 'Domestic Short-haired', 'Bengal', 'Russian Blue', 'Can\'t find it?'],
+        dog: ['Labrador', 'Bulldog', 'Retriever', 'German Shepherd', 'Poodle', 'Beagle', 'Can\'t find it?']
       },
     }
   },
@@ -89,6 +89,7 @@ export default {
   flex-direction: column;
 }
 
+// TODO: update select dropdown icon to be a magnifying glass
 input, select {
   padding: 5px 12px;
   background-color: white;
